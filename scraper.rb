@@ -20,14 +20,13 @@ def scrape_list(url)
     maj_or_opp.xpath('following-sibling::h2 | following-sibling::h3 | following-sibling::h4').slice_before { |e| e.name != 'h4' }.first.each do |grp|
       group = grp.css('.mw-headline').text.split(/\(/).first.tidy
       grp.xpath('following-sibling::ul[1]/li').each do |li|
-        person = li.css('a').first
         data = {
-          name:     person.text.tidy,
-          wikiname: person.attr('class') == 'new' ? '' : person.attr('title'),
-          area:     li.text.split(',').last(2).join(', ').sub(')', '').tidy,
+          name:     li.text.split('(').first.tidy,
+          area:     li.css('a').to_a.last(2).map(&:text).join(", "),
           party:    group,
           term:     2012,
         }
+        # warn data
         ScraperWiki.save_sqlite(%i(name area party), data)
       end
     end

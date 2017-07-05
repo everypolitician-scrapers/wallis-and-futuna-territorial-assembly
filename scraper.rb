@@ -26,7 +26,7 @@ def scrape_list(url)
           party:    group,
           term:     2012,
         }
-        # warn data
+        puts data.reject { |_, v| v.to_s.empty? }.sort_by { |k, _| k }.to_h if ENV['MORPH_DEBUG']
         ScraperWiki.save_sqlite(%i(name area party), data)
       end
     end

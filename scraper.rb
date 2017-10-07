@@ -24,7 +24,6 @@ def scrape_list(url)
           name:     li.text.split('(').first.tidy,
           area:     li.css('a').to_a.last(2).map(&:text).join(", "),
           party:    group,
-          term:     2012,
         }
         puts data.reject { |_, v| v.to_s.empty? }.sort_by { |k, _| k }.to_h if ENV['MORPH_DEBUG']
         ScraperWiki.save_sqlite(%i(name area party), data)
